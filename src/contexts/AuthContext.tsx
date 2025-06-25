@@ -6,6 +6,12 @@ import { useRouter } from "next/navigation";
 interface AuthContextData {
   isAuthenticated: boolean;
   login: (email: string, senha: string) => Promise<void>;
+  register: (
+    nome: string,
+    nascimento: string,
+    email: string,
+    senha: string
+  ) => Promise<void>;
   logout: () => void;
 }
 
@@ -39,9 +45,45 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       }
 
       setIsAuthenticated(true);
-      router.push("/dashboard");
+
+      const data = await response.json();
+      document.cookie = `token=${data.token}; Path=/`;
+
+      router.push("/");
     } catch (error) {
       console.error("Login error:", error);
+      throw error;
+    }
+  };
+
+  const register = async (
+    nome: string,
+    nascimento: string,
+    email: string,
+    senha: string
+  ) => {
+    try {
+      const response = await fetch("http://localhost:3000/usuarios", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+        },
+        credentials: "include",
+        body: JSON.stringify({ nome, email, senha, nascimento }),
+      });
+
+      if (!response.ok) {
+        throw new Error("Register failed");
+      }
+
+      setIsAuthenticated(true);
+
+      const data = await response.json();
+      document.cookie = `token=${data.token}; Path=/`;
+
+      router.push("/");
+    } catch (error) {
+      console.error("Register error:", error);
       throw error;
     }
   };
@@ -53,7 +95,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   };
 
   return (
-    <AuthContext.Provider value={{ isAuthenticated, login, logout }}>
+    <AuthContext.Provider value={{ isAuthenticated, login, register, logout }}>
       {children}
     </AuthContext.Provider>
   );
