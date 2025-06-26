@@ -3,6 +3,7 @@ import { Inter } from "next/font/google";
 import "./globals.css";
 import Link from "next/link";
 import { AuthProvider } from "@/contexts/AuthContext";
+import UserMenu from "@/components/UserMenu";
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,9 +39,7 @@ export default function RootLayout({
                 <Link className="text-indigo-600" href="/login">
                   Fazer login
                 </Link>
-                <Link className="text-indigo-600" href="/usuario/will">
-                  Meus cursos
-                </Link>
+                <UserMenu />
               </menu>
             </header>
             <div className="layout-guide flex-1">{children}</div>

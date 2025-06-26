@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
+import jwt from "jsonwebtoken";
 
 interface AuthContextData {
   isAuthenticated: boolean;
@@ -47,7 +48,10 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setIsAuthenticated(true);
 
       const data = await response.json();
+
+      const decodedJwt = jwt.decode(data.token);
       document.cookie = `token=${data.token}; Path=/`;
+      document.cookie = `user=${JSON.stringify(decodedJwt)}; Path=/`;
 
       router.push("/");
     } catch (error) {
