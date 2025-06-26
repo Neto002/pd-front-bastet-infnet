@@ -14,6 +14,7 @@ export default function CursoView({ data }: { data: CursoType }) {
 
     if (response.ok) {
       alert("Inscrição cancelada");
+      window.location.reload();
     } else {
       const data = await response.json();
       alert(data.message);
@@ -32,6 +33,7 @@ export default function CursoView({ data }: { data: CursoType }) {
 
     if (response.ok) {
       alert("Inscrição realizada");
+      window.location.reload();
     } else {
       const data = await response.json();
       alert(data.message);
